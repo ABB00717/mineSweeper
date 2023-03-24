@@ -2,51 +2,86 @@
 #include <stdlib.h>
 #include <time.h>   
 
-void printField(int rows, int cols, int revealedMineField[9][9], int mineAmount[9][9]){ //輸出Field
-    printf("\\123456789\n");
+void menu(int *rows, int *cols, int *mines){
+    printf("歡迎來到踩地雷~\n基本規則如同國際通用的踩地雷規則，接下來請先自訂場地大小以及地雷數量，推薦為9x9和10顆炸彈。\n");
+
+        printf("請輸入橫列數量(上限為30)");
+        scanf("%d", &*rows);
+        printf("請輸入直列數量(上限為30)");
+        scanf("%d", &*cols);
+        printf("請輸入炸彈數量(不能超過炸彈數量)");
+        scanf("%d", &*mines);
+    system("pause");
+    system("cls");
+}
+
+void lessThanNine(int list){
+    if(list < 9){
+        printf("|%d |", list+1);
+    }else{
+        printf("|%d|", list+1);
+    }
+}
+
+void printField(int rows, int cols, int revealedMineField[30][30], int mineAmount[30][30]){ //輸出Field
+    printf("    ");
+    for(int col = 0;col < cols;col++){
+        lessThanNine(col);
+    }
+    printf("\n");
     for(int row = 0;row < rows;row++){  //輸出Field
-        printf("%d", row+1);
+        lessThanNine(row);
+
         for(int col = 0;col < cols;col++){
             if(revealedMineField[row][col] == -1){
-                printf("*");
+                printf("|  |");
             }else{
-                printf("%d", mineAmount[row][col]);
+                printf("|%d |", mineAmount[row][col]);
             }
         }
+
+        lessThanNine(row);
         printf("\n");
     }
+
+    printf("    ");
+    for(int col = 0;col < cols;col++){
+        lessThanNine(col);
+    }
+    printf("\n");
 }
 
-void printFailField(int rows, int cols, int revealedMineField[9][9], int mineAmount[9][9]){ //輸出Field
-    printf("\\123456789\n");
+void printFinalField(int rows, int cols, int revealedMineField[30][30], int mineAmount[30][30]){ //輸出Field
+    printf("    ");
+    for(int col = 0;col < cols;col++){
+        lessThanNine(col);
+    }
+    printf("\n");
     for(int row = 0;row < rows;row++){  //輸出Field
-        printf("%d", row+1);
+        lessThanNine(row);
+        
         for(int col = 0;col < cols;col++){
             if(mineAmount[row][col] == 9){
-                printf("#");
+                printf("|# |");
             }else if(revealedMineField[row][col] == -1){
-                printf("*");
+                printf("|  |");
             }else{
-                printf("%d", mineAmount[row][col]);
+                printf("|%d |", mineAmount[row][col]);
             }
         }
+
+        lessThanNine(row);
         printf("\n");
     }
-}
 
-
-void printMineAmount(int rows, int cols, int mineAmount[9][9]){
-    printf("/123456789\n");
-    for(int row = 0;row < rows;row++){  //輸出Field
-        printf("%d", row+1);
-        for(int col = 0;col < cols;col++){
-            printf("%d", mineAmount[row][col]);
-        }
-        printf("\n");
+    printf("    ");
+    for(int col = 0;col < cols;col++){
+        lessThanNine(col);
     }
+    printf("\n");
 }
 
-int checkRemainedBlocks(int rows, int cols, int field[9][9], int revealedMineField[9][9], int remainedBlocks){
+int checkRemainedBlocks(int rows, int cols, int field[30][30], int revealedMineField[30][30], int remainedBlocks){
     for(int row = 0;row < rows;row++){ 
         for(int col = 0;col < cols;col++){
             if (field[row][col] != 9 && revealedMineField[row][col] != -1){
@@ -58,7 +93,7 @@ int checkRemainedBlocks(int rows, int cols, int field[9][9], int revealedMineFie
     return remainedBlocks;
 }
 
-void detectMines(int rows, int cols, int targetRow, int targetCol, int field[9][9], int mineAmount[9][9]){
+void detectMines(int rows, int cols, int targetRow, int targetCol, int field[30][30], int mineAmount[30][30]){
     int detectMineRow, detectMineCol, haveMine = 0;
 
     for(detectMineRow = targetRow-1;detectMineRow <= targetRow+1;detectMineRow++){
@@ -72,7 +107,7 @@ void detectMines(int rows, int cols, int targetRow, int targetCol, int field[9][
     mineAmount[targetRow][targetCol] = haveMine;
 }
 
-void  detectSurroundMines(int rows, int cols, int targetRow, int targetCol, int field[9][9], int revealedMineField[9][9], int mineAmount[9][9], int detectedField[9][9]){
+void  detectSurroundMines(int rows, int cols, int targetRow, int targetCol, int field[30][30], int revealedMineField[30][30], int mineAmount[30][30], int detectedField[30][30]){
     int detectMineRow, detectMineCol, haveMine = 0; 
 
     for(detectMineRow = targetRow-1;detectMineRow <= targetRow+1;detectMineRow++){//九宮格循環
@@ -103,7 +138,7 @@ void  detectSurroundMines(int rows, int cols, int targetRow, int targetCol, int 
     }
 }
 
-void checkMineField(int rows, int cols, int field[9][9], int mineAmount[9][9]){
+void checkMineField(int rows, int cols, int field[30][30], int mineAmount[30][30]){
     for(int row = 0;row < rows;row++){ 
         for(int col = 0;col < cols;col++){
             if(field[row][col] != 9){
@@ -113,7 +148,7 @@ void checkMineField(int rows, int cols, int field[9][9], int mineAmount[9][9]){
     }
 }
 
-void putMines(int rows, int cols, int field[9][9], int mines, int mineAmount[9][9]){
+void putMines(int rows, int cols, int field[30][30], int mines, int mineAmount[30][30]){
     int row, col, mineAmountF = 0;
 
     do{ // 放炸彈
@@ -127,37 +162,25 @@ void putMines(int rows, int cols, int field[9][9], int mines, int mineAmount[9][
     }while(mineAmountF < mines);
 }
 
-void printEndField(int rows, int cols, int field[9][9]){
-    printf("/123456789\n");
-    for(int row = 0;row < rows;row++){
-        printf("%d", row+1);
-        for(int col = 0;col < cols;col++){
-            if(field[row][col] == 9){
-                printf("9");
-            }else{
-                printf("*");
-            }
-        }
-        printf("\n");
-    }
-}
-
-int field[9][9] = { 0 }, mineAmount[9][9] = { 0 }, detectedField[9][9] = { 0 };
+int field[30][30] = { 0 }, mineAmount[30][30] = { 0 }, detectedField[30][30] = { 0 };
 
 int main(){
     //初始化
-    int rows = 9, cols = 9, mines = 10;
+    int rows = 30, cols = 30, mines = 30;
     int row = 0, col = 0;
     int gaming = 1, status = 0, remainedBlocks = rows*cols-mines, con = 1, ifFirstTime = 1; //0遊玩中 1贏了 2輸了
-    int playEnterRow = -1, playEnterCol = -1, targetRow, targetCol, revealedMineField[9][9] = { 0 };
+    int playEnterRow = -1, playEnterCol = -1, targetRow, targetCol, revealedMineField[30][30] = { 0 };
     int detectMineRow = -100, detectMineCol = -100, haveMine = 0;
+    srand(time(0));
+
+    menu(&rows, &cols, &mines);
+
     for(row = 0;row < rows;row++){
         for(col = 0;col < cols;col++){
             revealedMineField[row][col] = -1;
         }
     }
-    srand(time(0));
-
+    
     printField(rows, cols, revealedMineField, mineAmount); //輸出Field
     printf("請輸入你想開啟的方格(範例:1 8 就是第1列第8行)");
     scanf("%d%d", &playEnterRow, &playEnterCol);
@@ -183,7 +206,8 @@ int main(){
 
         if(remainedBlocks == 0){ //是否只剩地雷
             gaming = 0;
-            printField(rows, cols, revealedMineField, mineAmount);
+            system("cls");
+            printFinalField(rows, cols, revealedMineField, mineAmount);
             printf("恭喜~~你贏啦~~");
             break;
         }else{
@@ -213,7 +237,7 @@ int main(){
             }else{
                 gaming = 0;
                 system("cls");
-                printFailField(rows, cols, revealedMineField, mineAmount);  
+                printFinalField(rows, cols, revealedMineField, mineAmount);  
                 printf("哇輸了，不好意思耶");
                 break;
             }
