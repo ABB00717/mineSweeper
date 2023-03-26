@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <time.h>   
 
@@ -84,9 +83,16 @@ void input(int *playerEnterRow, int *playerEnterCol, char *mode, int rows, int c
             system("cls");
             printField(rows, cols, revealedMineField, mineAmount); //輸出Field
             input(playerEnterRow, playerEnterCol, mode, rows, cols, revealedMineField, mineAmount); 
-        }else{
+        }else if(atoi(preInput) <= rows && atoi(preInput) > 0){
             scanf("%d", &*playerEnterCol);
+            while(*playerEnterCol > cols || *playerEnterCol < 1){
+                scanf("%d", &*playerEnterCol);
+            }
             *playerEnterRow = atoi(preInput);
+        }else{
+            system("cls");
+            printField(rows, cols, revealedMineField, mineAmount);
+            input(playerEnterRow, playerEnterCol, mode, rows, cols, revealedMineField, mineAmount);
         }
     }else{
         printf("當前模式為: 標記模式\n");
@@ -101,9 +107,16 @@ void input(int *playerEnterRow, int *playerEnterCol, char *mode, int rows, int c
             system("cls");
             printField(rows, cols, revealedMineField, mineAmount); //輸出Field
             input(playerEnterRow, playerEnterCol, mode, rows, cols, revealedMineField, mineAmount); 
-        }else{
+        }else if(atoi(preInput) <= rows && atoi(preInput) > 0){
             scanf("%d", &*playerEnterCol);
+            while(*playerEnterCol > cols || *playerEnterCol < 1){
+                scanf("%d", &*playerEnterCol);
+            }
             *playerEnterRow = atoi(preInput);
+        }else{
+            system("cls");
+            printField(rows, cols, revealedMineField, mineAmount);
+            input(playerEnterRow, playerEnterCol, mode, rows, cols, revealedMineField, mineAmount);
         }
     }
     
@@ -170,8 +183,8 @@ void detectMines(int rows, int cols, int targetRow, int targetCol, int field[30]
 void  detectSurroundMines(int rows, int cols, int targetRow, int targetCol, int field[30][30], int revealedMineField[30][30], int mineAmount[30][30], int detectedField[30][30]){
     int detectMineRow, detectMineCol, haveMine = 0; 
 
-    for(detectMineRow = targetRow-1;detectMineRow <= targetRow+1;detectMineRow++){//九宮格循環
-        for(detectMineCol = targetCol-1;detectMineCol <= targetCol+1;detectMineCol++){
+    for(detectMineRow = targetRow;detectMineRow <= targetRow+1;detectMineRow++){//九宮格循環
+        for(detectMineCol = targetCol;detectMineCol <= targetCol+1;detectMineCol++){
 
             if(detectMineRow >= 0 && detectMineRow < rows && detectMineCol >= 0 && detectMineCol < cols){//確保不要超出界線
 
@@ -287,7 +300,6 @@ int main(){
             system("cls");
             if(ifFirstTime != 1){
                 printField(rows, cols, revealedMineField, mineAmount); //輸出Field
-                printf("%d\n", remainedBlocks);
                 input(&playerEnterRow, &playerEnterCol, mode, rows, cols, revealedMineField, mineAmount); 
             }
             ifFirstTime--;
